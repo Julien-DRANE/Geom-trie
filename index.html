@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Épreuve de Géométrie</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Lien vers le fichier CSS -->
+</head>
+<body>
+
+<div class="container">
+    <h1>Épreuve de Géométrie</h1>
+    <div id="problemArea">
+        <p id="problem"></p>
+        <input type="text" id="answer" placeholder="Entrez votre réponse ici">
+        <button onclick="checkAnswer()">Vérifier</button>
+        <button onclick="showSolution()">Afficher la Solution</button>
+        <p id="result" class="animation"></p>
+        <p id="solution" class="animation"></p>
+        <p id="score">Score : 0</p>
+        <canvas id="figureCanvas" width="400" height="400"></canvas>
+    </div>
+</div>
+
+<div class="calculator">
+    <input type="text" id="display" disabled>
+    <div>
+        <button onclick="appendToDisplay('7')">7</button>
+        <button onclick="appendToDisplay('8')">8</button>
+        <button onclick="appendToDisplay('9')">9</button>
+        <button onclick="appendToDisplay('/')">/</button>
+    </div>
+    <div>
+        <button onclick="appendToDisplay('4')">4</button>
+        <button onclick="appendToDisplay('5')">5</button>
+        <button onclick="appendToDisplay('6')">6</button>
+        <button onclick="appendToDisplay('*')">*</button>
+    </div>
+    <div>
+        <button onclick="appendToDisplay('1')">1</button>
+        <button onclick="appendToDisplay('2')">2</button>
+        <button onclick="appendToDisplay('3')">3</button>
+        <button onclick="appendToDisplay('-')">-</button>
+    </div>
+    <div>
+        <button onclick="appendToDisplay('0')">0</button>
+        <button onclick="calculateResult()">=</button>
+        <button onclick="clearDisplay()">C</button>
+        <button onclick="appendToDisplay('+')">+</button>
+    </div>
+    <div>
+        <button onclick="calculateCos()">cos</button>
+    </div>
+</div>
+
+<script>
+    let score = 0;
+    let currentProblemIndex = 0;
+    let currentSolution = "";
+
+    // Fonction pour générer un nombre aléatoire entre min et max
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Génération des problèmes avec des valeurs aléatoires
+    const problems = [
+        {
+            drawFunction: drawTriangle,
+            getProblem: function() {
+                const AB = getRandomInt(4, 10); // Longueur AB entre 4 et 10 cm
+                const AC = getRandomInt(4, 10); // Longueur AC entre 4 et 10 cm
+                const angleA = getRandomInt(30, 90); // Angle A entre 30° et 90°
+                const BC = Math.sqrt(Math.pow(AB, 2) + Math.pow(AC, 2) - 2 * AB * AC * Math.cos(angleA * Math.PI / 180)).toFixed(2);
+
+                // Solution détaillée étape par étape
+                currentSolution = `
+                Étape 1 : Utiliser le théorème de Cosinus : <br>
+                BC² = AB² + AC² - 2 * AB * AC * cos(angle A) <br>
+                <br>
+                Étape 2 : Substituer les valeurs : <br>
+                BC² = ${AB}² + ${AC}² - 2 * ${AB} * ${AC} * cos(${angleA}) <br>
+                <br>
+                Étape 3 : Calculer chaque terme : <br>
+                BC² = ${AB * AB} + ${AC * AC} - 2 * ${AB} * ${AC} * ${Math.cos(angleA * Math.PI / 180).toFixed(2)} <br>
+                <br>
+                Étape 4 : Finaliser le calcul : <br>
+                BC² = ${BC}² <br>
+                <br>
+                Étape 5 : En prenant la racine carrée, on obtient : <br>
+                BC = ${BC} cm.
+                `;
+                return {
+                    problem: `Soit un triangle ABC avec AB = ${AB} cm, AC = ${AC} cm, et l'angle A = ${angleA}°. Calculez la longueur du côté BC.`,
+                    answer: BC
+                };
+            }
+        },
+        {
+            drawFunction: drawCone,
+            getProblem: function() {
+                const radius = getRandomInt(2, 5); // Rayon entre 2 et 5 cm
+                const height = getRandomInt(5, 10); // Hauteur entre 5 et 10 cm
+                const volume = ((1/3) * Math.PI * Math.pow(radius, 2) * height).toFixed(2);
+
+                // Solution détaillée étape par étape
+                currentSolution = `
+                Étape 1 : Utiliser la formule du volume d'un cône : <br>
+                V = 1/3 * π * r² * h <br>
+                <br>
+                Étape 2 : Substituer les valeurs : <br>
+                V = 1/3 * π * ${radius}² * ${height} <br>
+                <br>
+                Étape 3 : Calculer ${radius}² : <br>
+                V = 1/3 * π * ${radius * radius} * ${height} <br>
+                <br>
+                Étape 4 : Multiplier : <br>
+                V = 1/3 * π * ${radius * radius * height} <br>
+                <br>
+                Étape 5 : Finaliser le calcul : <br>
+                V = ${volume} cm³.
+                `;
+                return {
+                    problem: `Quel est le volume d'un cône de rayon ${radius} cm et de hauteur ${height} cm ? (Utilisez V = 1/3 * π * r² * h)`,
+                    answer: volume
+                };
+            }
+        }
+    ];
+
+    function loadProblem() {
+        const currentProblem = problems[currentProblemIndex].getProblem();
+        document.getElementById("problem").innerText = currentProblem.problem;
+        document.getElementById("answer").value = ""; // Réinitialiser le champ de réponse
+        document.getElementById("solution").style.display = "none"; // Masquer la solution précédente
+        problems[currentProblemIndex].drawFunction();
+    }
+
+    function drawTriangle() {
+        const canvas = document.getElementById("figureCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Efface le canvas
+
+        const AB = getRandomInt(4, 10);
+        const AC = getRandomInt(4, 10);
+        const angleA = getRandomInt(30, 90);
+        const BC = Math.sqrt(Math.pow(AB, 2) + Math.pow(AC, 2) - 2 * AB * AC * Math.cos(angleA * Math.PI / 180));
+
+        ctx.beginPath();
+        ctx.moveTo(100, 300); // Point A
+        ctx.lineTo(100 + AB * 20, 300); // Point B
+        ctx.lineTo(100 + (AB * 20) / 2, 300 - (Math.sqrt(Math.pow(AC * 20, 2) - Math.pow(AB * 20 / 2, 2)))); // Point C
+        ctx.closePath();
+        ctx.strokeStyle = "#FF5733"; // Couleur des lignes
+        ctx.stroke();
+        ctx.fillStyle = "rgba(255, 87, 51, 0.3)"; // Couleur de remplissage avec transparence
+        ctx.fill();
+
+        // Ajouter des étiquettes aux points
+        ctx.fillStyle = "black";
+        ctx.fillText("A", 100 - 10, 310);
+        ctx.fillText("B", 100 + AB * 20 + 10, 310);
+        ctx.fillText("C", 100 + (AB * 20) / 2 - 10, 300 - (Math.sqrt(Math.pow(AC * 20, 2) - Math.pow(AB * 20 / 2, 2))) - 10);
+    }
+
+    function drawCone() {
+        const canvas = document.getElementById("figureCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Efface le canvas
+
+        const radius = getRandomInt(2, 5);
+        const height = getRandomInt(5, 10);
+
+        // Dessine un cône
+        ctx.beginPath();
+        ctx.moveTo(200, 300); // Point de la base
+        ctx.lineTo(200 - radius * 20, 300); // Bord gauche
+        ctx.lineTo(200 + radius * 20, 300); // Bord droit
+        ctx.lineTo(200, 300 - height * 20); // Sommet du cône
+        ctx.closePath();
+        ctx.strokeStyle = "#4CAF50"; // Couleur des lignes
+        ctx.stroke();
+        ctx.fillStyle = "rgba(76, 175, 80, 0.3)"; // Couleur de remplissage avec transparence
+        ctx.fill();
+
+        // Ajouter une étiquette au sommet
+        ctx.fillStyle = "black";
+        ctx.fillText("Sommet", 200 - 20, 300 - height * 20 - 10);
+    }
+
+    function checkAnswer() {
+        const userAnswer = parseFloat(document.getElementById("answer").value);
+        const currentProblem = problems[currentProblemIndex].getProblem();
+        const result = document.getElementById("result");
+
+        if (userAnswer === parseFloat(currentProblem.answer)) {
+            result.innerText = "Correct !";
+            score++;
+        } else {
+            result.innerText = "Incorrect.";
+        }
+        
+        document.getElementById("score").innerText = "Score : " + score;
+        currentProblemIndex++;
+        
+        if (currentProblemIndex < problems.length) {
+            setTimeout(() => {
+                loadProblem();
+            }, 2000);
+        } else {
+            setTimeout(() => alert("Fin du quiz ! Votre score final est : " + score), 2000);
+        }
+    }
+
+    function showSolution() {
+        document.getElementById("solution").innerHTML = currentSolution; // Afficher la solution avec les étapes
+        document.getElementById("solution").style.display = "block"; // Afficher la solution
+    }
+
+    function appendToDisplay(value) {
+        document.getElementById("display").value += value;
+    }
+
+    function clearDisplay() {
+        document.getElementById("display").value = "";
+    }
+
+    function calculateResult() {
+        try {
+            const result = eval(document.getElementById("display").value);
+            document.getElementById("display").value = result;
+        } catch (error) {
+            document.getElementById("display").value = "Erreur";
+        }
+    }
+
+    function calculateCos() {
+        const angle = parseFloat(prompt("Entrez un angle en degrés :"));
+        if (!isNaN(angle)) {
+            const cosValue = Math.cos(angle * Math.PI / 180).toFixed(4); // Calcul du cosinus
+            document.getElementById("display").value = `cos(${angle}) = ${cosValue}`;
+        } else {
+            alert("Veuillez entrer un nombre valide.");
+        }
+    }
+
+    loadProblem();
+</script>
+
+</body>
+</html>

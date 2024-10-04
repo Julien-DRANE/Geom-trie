@@ -1,0 +1,129 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #ffefba, #ffffff); /* Dégradé pastel */
+    color: #333;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    margin: 0; /* Enlève les marges par défaut */
+    padding: 10px; /* Ajoute du padding */
+}
+
+.container {
+    margin: 20px;
+    width: 100%; /* S'assurer que la largeur s'adapte */
+    max-width: 400px; /* Largeur maximale pour les écrans plus grands */
+}
+
+h1 {
+    color: #4CAF50;
+    font-size: 1.5em; /* Taille de police ajustée */
+}
+
+#problemArea {
+    margin-top: 20px;
+    width: 100%; /* Largeur s'adapte à l'écran */
+}
+
+canvas {
+    border: 2px solid #4CAF50;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 100%; /* S'assure que le canvas s'ajuste */
+    height: auto; /* Laisse le navigateur gérer la hauteur */
+}
+
+input[type="text"] {
+    padding: 10px;
+    border: 2px solid #4CAF50;
+    border-radius: 5px;
+    width: calc(100% - 22px); /* Largeur flexible avec padding */
+}
+
+button {
+    padding: 8px 12px; /* Réduit le padding pour les boutons */
+    margin-left: 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 22%; /* Ajuste la largeur pour trois boutons sur une ligne */
+    margin-bottom: 5px; /* Marge entre les boutons */
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#result {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#solution {
+    font-weight: normal;
+    margin-top: 10px;
+    text-align: left;
+    display: none;
+}
+
+#score {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.animation {
+    animation: bounce 0.5s;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.calculator {
+    margin-left: 0; /* Annule le décalage à gauche */
+    text-align: left;
+    border: 1px solid #4CAF50;
+    border-radius: 8px;
+    padding: 10px; /* Réduit le padding de la calculatrice */
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%; /* S'assure que la calculatrice s'ajuste */
+}
+
+.calculator button {
+    width: 20%; /* Ajuste la largeur des boutons de la calculatrice */
+    height: 35px; /* Réduit la hauteur des boutons */
+    margin: 3px; /* Réduit l'espacement entre les boutons */
+    font-size: 16px; /* Réduit la taille de la police */
+}
+
+#display {
+    width: calc(100% - 20px); /* S'assure que l'affichage s'ajuste */
+    height: 35px; /* Réduit la hauteur de l'affichage */
+    text-align: right;
+    font-size: 20px; /* Réduit la taille de la police */
+    margin-bottom: 10px;
+}
+
+/* Ajoute des styles pour les écrans plus petits */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.2em; /* Ajuste la taille du texte pour les petits écrans */
+    }
+
+    button {
+        width: 100%; /* Les boutons occupent toute la largeur */
+        margin-left: 0; /* Enlève la marge à gauche */
+    }
+
+    .calculator button {
+        width: 23%; /* Ajuste la largeur des boutons de la calculatrice */
+    }
+}
