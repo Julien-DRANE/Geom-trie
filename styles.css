@@ -44,16 +44,17 @@ input[type="text"] {
 }
 
 button {
-    padding: 8px 12px; /* Réduit le padding pour les boutons */
-    margin-left: 5px;
+    padding: 5px; /* Réduit le padding pour les boutons */
+    margin-left: 2px; /* Réduit la marge à gauche */
     border: none;
     border-radius: 5px;
     background-color: #4CAF50;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
-    width: 22%; /* Ajuste la largeur pour trois boutons sur une ligne */
-    margin-bottom: 5px; /* Marge entre les boutons */
+    width: 20%; /* Ajuste la largeur pour une meilleure présentation */
+    margin-bottom: 3px; /* Marge entre les boutons */
+    font-size: 14px; /* Réduit la taille de la police */
 }
 
 button:hover {
@@ -98,17 +99,17 @@ button:hover {
 }
 
 .calculator button {
-    width: 20%; /* Ajuste la largeur des boutons de la calculatrice */
-    height: 35px; /* Réduit la hauteur des boutons */
+    width: 23%; /* Ajuste la largeur des boutons de la calculatrice */
+    height: 30px; /* Réduit la hauteur des boutons */
     margin: 3px; /* Réduit l'espacement entre les boutons */
-    font-size: 16px; /* Réduit la taille de la police */
+    font-size: 14px; /* Ajuste la taille de la police */
 }
 
 #display {
     width: calc(100% - 20px); /* S'assure que l'affichage s'ajuste */
-    height: 35px; /* Réduit la hauteur de l'affichage */
+    height: 30px; /* Réduit la hauteur de l'affichage */
     text-align: right;
-    font-size: 20px; /* Réduit la taille de la police */
+    font-size: 16px; /* Réduit la taille de la police */
     margin-bottom: 10px;
 }
 
@@ -124,6 +125,6 @@ button:hover {
     }
 
     .calculator button {
-        width: 23%; /* Ajuste la largeur des boutons de la calculatrice */
+        width: 30%; /* Ajuste la largeur des boutons de la calculatrice */
     }
 }
